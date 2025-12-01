@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Let's Get Funky | ME 218a Final Project</title>
+    <title>Let's Get Funky | ME 218a Team 14</title>
     <style>
         /* --- STEAMPUNK THEME CSS --- */
         :root {
@@ -118,6 +118,15 @@
 
         h4 { color: var(--copper); margin-top: 25px; font-weight: bold;}
 
+        /* LISTS */
+        ul.styled-list {
+            list-style-type: square;
+            color: var(--dark-wood);
+        }
+        ul.styled-list li {
+            margin-bottom: 10px;
+        }
+        
         /* TEAM GRID */
         .team-grid {
             display: grid;
@@ -200,18 +209,20 @@
 
 <nav>
     <ul>
-        <li><a href="#video">Demo</a></li>
-        <li><a href="#team">Team</a></li>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#interaction">Interaction</a></li>
         <li><a href="#mechanical">Mechanical</a></li>
         <li><a href="#electrical">Electrical</a></li>
         <li><a href="#software">Software</a></li>
+        <li><a href="#team">Team</a></li>
         <li><a href="#bom">BOM</a></li>
+        <li><a href="#gems">Gems</a></li>
     </ul>
 </nav>
 
 <header>
     <h1>Let's Get Funky</h1>
-    <h2>A Steampunk Pinball Experience</h2>
+    <h2>A Steampunk-Themed Carnival Game</h2>
     <p>ME 218a Fall 2025 | Stanford University</p>
 </header>
 
@@ -219,85 +230,101 @@
 
     <section id="video">
         <h3>System Demonstration</h3>
-        <p>Watch the "Let's Get Funky" engine in operation, featuring the automated gear dispensing system and dynamic LED scoring.</p>
+        <p>Watch the "Let's Get Funky" engine in operation.</p>
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/PLACEHOLDER_ID" title="Project Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </section>
 
-    <section id="team">
-        <h3>The Engineers</h3>
-        <div class="team-grid">
-            <div class="team-member">
-                <img src="clive.jpg" alt="Clive Chung"> 
-                <h5>Clive Chung</h5>
-                <p>Mechanical Systems & Fabrication</p>
-            </div>
-            <div class="team-member">
-                <img src="ke.jpg" alt="Ke Ou">
-                <h5>Ke Ou</h5>
-                <p>Software Architecture & LED Logic</p>
-            </div>
-            <div class="team-member">
-                <img src="maroussia.jpg" alt="Maroussia Walckiers">
-                <h5>Maroussia Walckiers</h5>
-                <p>Electrical Integration & Audio</p>
-            </div>
-        </div>
+    <section id="overview">
+        <h3>Project Description</h3>
+        <p>Our team was tasked to design and build a Steampunk-Themed Carnival Game, a "Temporal Entertainment Module" (TEM), that bridges the gap between past and future. From this, we present "Let's Get Funky," a mechanical pinball machine embodying the industrial spirit of the 1800s.</p>
+        
+        <h4>How it Works</h4>
+        <p>When powered on, Let's Get Funky initializes in a WELCOME mode shown on the LED display. Once the START button is pressed, the system transitions to the READY state. The player initiates gameplay by pulling the LAUNCH plunger. A sensor detects the ball's entry into the playfield, triggering the ACTIVE state.</p>
+        
+        <p>During the game, a 60-second timer counts down. Players must use the flippers to strike targets or navigate the ramp to accumulate points. The points for hitting the target are force sensitive, the harder you hit it, the more points you get.</p>
+        
+        <p>To accommodate difficulty, the system includes a "Ball Save" feature: if the ball drains within the first 30 seconds, it can be returned to play. After 30 seconds, losing the ball results in an immediate GAME OVER.</p>
+        
+        <p>The system monitors user input for inactivity. If no activity is detected for 20 seconds—defined as staying in the READY state without launching, or in the ACTIVE state without scoring or losing the ball—the game automatically resets to the WELCOME state.</p>
     </section>
-    
+
+    <section id="interaction">
+        <h3>User Interaction</h3>
+        
+        <h4>User Inputs</h4>
+        <p>The game offers 4 modes of user interaction. After pressing the start button to start the game, the user launches the ball, uses the flippers and hits targets to gain points until the ball is lost.</p>
+        <ul class="styled-list">
+            <li><strong>Start button:</strong> Button to start the game.</li>
+            <li><strong>Flippers:</strong> Buttons to move the flippers.</li>
+            <li><strong>Target hits:</strong> Targets to gain points.</li>
+            <li><strong>Ball sensing:</strong> Sensors for launched, lost and slide ball.</li>
+        </ul>
+        <p></p>
+
+        <h4>User Feedback</h4>
+        <p>The game provides feedback through three channels:</p>
+        <ul class="styled-list">
+            <li><strong>Visually:</strong> The LED display indicates the game mode, remaining time, and score.</li>
+            <li><strong>Auditorily:</strong> The game plays thematic music during gameplay and a specific alert to signal the end of the round.</li>
+            <li><strong>Haptically:</strong> The player receives vibrational feedback whenever a target is hit, incentivizing strong impacts and confirming scores.</li>
+        </ul>
+        <p></p>
+    </section>
+
     <section id="mechanical">
         <h3>Mechanical Design</h3>
-        <p>Our "Temporal Entertainment Module" (TEM) embodies the industrial spirit of the 1800s. The chassis was modeled in OnShape and constructed primarily from <strong>1/4" plywood</strong>, laser-cut at Lab64 and assembled with wood glue.</p>
+        <p>The mechanical system was developed in parallel to the electrical and software aspects of the project. The design goals focused on two critical requirements: component integration and player ergonomics.</p>
         
-        <p><strong>Key Features:</strong></p>
-        <ul>
-            <li><strong>Chassis:</strong> A custom 50x50x100cm enclosure stained to resemble antique mahogany.</li>
-            <li><strong>Custom Components:</strong> Playfield characters, dials, and wire management covers were 3D printed using PLA.</li>
-            <li><strong>Actuation:</strong> Two servos control the mechanics—one for dispensing prize gears and one for the decorative gear mechanism.</li>
-        </ul>
+        <p>The game was modeled using OnShape and manufactured with the help of Lab64 and other on-campus facilities. The enclosure was laser cut from 1/8" plywood and 1/4" plywood, and assembled using wood glue.</p>
+        
+        <p>All other custom components (i.e. the flippers, plunger, slide, and gear dispenser) were 3D printed out of PLA.</p>
     </section>
 
     <section id="electrical">
         <h3>Electrical Design</h3>
-        <p>The electrical system bridges the 3.3V logic of the PIC32 with high-power 5V peripherals.</p>
-
         <img src="schematic.png" alt="Circuit Schematic" class="diagram-img">
         
-        <h4>Core Processing & Power</h4>
-        <ul>
+        <p>The electrical system bridges the 3.3V logic of the PIC32 with high-power 5V peripherals. Key components include:</p>
+        <ul class="styled-list">
             <li><strong>Microcontroller:</strong> PIC32MX170F256B running at 20MHz.</li>
-            <li><strong>Power & Signal:</strong> 74ACT244 buffers are used to shift logic levels for the LED Matrix.</li>
-        </ul>
-
-        <h4>Sensing & Feedback</h4>
-        <ul>
-            <li><strong>Inputs:</strong> TSSP58038 IR receivers detect ball presence, while Piezo elements provide force-sensitive scoring data.</li>
-            <li><strong>Audio:</strong> An Adafruit Audio FX Mini Sound Board triggers background music and "Game Over" cues via UART.</li>
-            <li><strong>Haptics:</strong> Vibration motors provide tactile feedback when targets are struck.</li>
+            <li><strong>Sensors:</strong> TSSP58038 IR receivers for ball tracking and Piezo elements for force-sensitive targets.</li>
+            <li><strong>Actuators:</strong> Servos for gear dispensing and DC motors for vibration feedback.</li>
+            <li><strong>Audio:</strong> JQ6500 Voice Module for sound effects.</li>
+            <li><strong>Drivers:</strong> IRF520 MOSFETs to drive high-current loads like motors and solenoids.</li>
         </ul>
     </section>
 
     <section id="software">
-        <h3>Software Architecture</h3>
-        <p>The system runs on the Gen2 Events & Services Framework. The architecture is hierarchical, with the <code>PinballService</code> acting as the master controller.</p>
+        <h3>Software Design</h3>
+        <p>The system runs on the Events & Services Framework using a hierarchical state machine approach.</p>
 
         <img src="fsm.png" alt="Finite State Machine Diagram" class="diagram-img">
+    </section>
 
-        <h4>State Machine Logic</h4>
-        <p>The system behavior is defined by five primary states:</p>
-        <ul>
-            <li><strong>WELCOME:</strong> The idle attraction state. It displays a welcome pattern on the LED matrix.</li>
-            <li><strong>READY:</strong> Upon pressing the Start button, the system resets the score and waits for the ball launch.</li>
-            <li><strong>GAME_IN_PLAY:</strong> The active state where the 60-second timer runs. It handles scoring from IR/Piezo sensors and manages the 20-second inactivity timer.</li>
-            <li><strong>TIMEOUT:</strong> If the player walks away, the game enters a temporary timeout state before resetting.</li>
-            <li><strong>GAME_OVER:</strong> Triggered by losing the ball (after the 30s "Ball Save" period expires) or the game timer ending. This state triggers the gear dispenser.</li>
-        </ul>
+    <section id="team">
+        <h3>Team</h3>
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="clive.jpg" alt="Clive Chung"> 
+                <h5>Clive Chung</h5>
+            </div>
+            <div class="team-member">
+                <img src="ke.jpg" alt="Ke Ou">
+                <h5>Ke Ou</h5>
+            </div>
+            <div class="team-member">
+                <img src="maroussia.jpg" alt="Maroussia Walckiers">
+                <h5>Maroussia Walckiers</h5>
+                <p>BS-BME Stanford '25, MSME '26</p>
+            </div>
+        </div>
     </section>
 
     <section id="bom">
         <h3>Bill of Materials</h3>
-        <p>The total project cost was approximately <strong>$194.89</strong>, remaining under the $200 limit.</p>
+        <p>The total project cost was approximately <strong>$175.56</strong>.</p>
         <table>
             <thead>
                 <tr>
@@ -348,25 +375,19 @@
                     <td>PIC32MX170F256B</td>
                     <td>1</td>
                     <td>Lab Kit</td>
-                    <td>$23.00</td>
+                    <td>$0.00</td>
                 </tr>
                 <tr>
                     <td>MAX7219 Dot Matrix</td>
                     <td>1</td>
                     <td>Lab Kit</td>
-                    <td>$9.00</td>
+                    <td>$0.00</td>
                 </tr>
                 <tr>
-                    <td>Adafruit Audio FX Mini</td>
-                    <td>1</td>
-                    <td>AMPS</td>
-                    <td>$15.00</td>
-                </tr>
-                <tr>
-                    <td>Adafruit Mono 2.5W Amp</td>
-                    <td>1</td>
-                    <td>AMPS</td>
-                    <td>$4.00</td>
+                    <td>Misc Electronics (LM339N, MCP6294)</td>
+                    <td>2</td>
+                    <td>Lab Kit</td>
+                    <td>$0.00</td>
                 </tr>
                 <tr>
                     <td>Speaker (8 Ohm 1 Watt)</td>
@@ -374,26 +395,60 @@
                     <td>SPDL</td>
                     <td>$2.00</td>
                 </tr>
-                 <tr>
-                    <td>Misc Electronics (LM339N, MCP6294)</td>
-                    <td>2</td>
-                    <td>Lab Kit</td>
-                    <td>$15.89</td>
+                <tr>
+                    <td>Piezo Discs (12pcs) </td>
+                    <td>1</td>
+                    <td>Amazon</td>
+                    <td>$7.74</td>
+                </tr>
+                <tr>
+                    <td>IR Sensor Kit (4 pairs)</td>
+                    <td>1</td>
+                    <td>Amazon</td>
+                    <td>$8.85</td>
+                </tr>
+                <tr>
+                    <td>JQ6500 Voice Module (2pcs)</td>
+                    <td>1</td>
+                    <td>Amazon</td>
+                    <td>$12.17</td>
+                </tr>
+                <tr>
+                    <td>Vibration Motors (20pcs)</td>
+                    <td>1</td>
+                    <td>Amazon</td>
+                    <td>$11.06</td>
+                </tr>
+                <tr>
+                    <td>IRF520 MOSFET Modules (5pcs)</td>
+                    <td>1</td>
+                    <td>Amazon</td>
+                    <td>$7.74</td>
                 </tr>
                 <tr>
                     <td><strong>TOTAL</strong></td>
                     <td></td>
                     <td></td>
-                    <td><strong>$194.89</strong></td>
+                    <td><strong>$175.56</strong></td>
                 </tr>
             </tbody>
         </table>
+        <p><a href="https://docs.google.com/spreadsheets/d/1muiBZHbCsakAO4bE_VL7oPqp21OFci2PAbMDRD0AnU0/edit?gid=0#gid=0">View Full BOM Spreadsheet</a></p>
+    </section>
+
+    <section id="gems">
+        <h3>Gems of Wisdom</h3>
+        <ul class="styled-list">
+            <li>As you advance in your project, make sure to update your electrical schematics and bill of materials.</li>
+            <li>Make sure to comment your code thoroughly to make each others life easier.</li>
+            <li>Ask questions! Do not hesitate to ask classmates or even friends that do not have anything to do with your project. Every insight is helpful for debugging, design and ideation.</li>
+        </ul>
     </section>
 
 </div>
 
 <footer>
-    <p><strong>Team Let's Get Funky</strong> | ME 218a 2025</p>
+    <p><strong>Team 14</strong> | ME 218a 2025</p>
 </footer>
 
 </body>
