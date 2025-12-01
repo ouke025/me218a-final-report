@@ -163,6 +163,28 @@
             border: 2px solid var(--gear-grey);
             margin: 20px 0;
         }
+        
+        /* TABLE STYLES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            border: 1px solid var(--dark-wood);
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--dark-wood);
+            color: var(--brass);
+        }
+
+        tr:nth-child(even) { background-color: #f2f2f2; }
+
 
         /* FOOTER */
         footer {
@@ -180,16 +202,16 @@
     <ul>
         <li><a href="#video">Demo</a></li>
         <li><a href="#team">Team</a></li>
-        <li><a href="#software">Software</a></li>
-        <li><a href="#electrical">Electrical</a></li>
         <li><a href="#mechanical">Mechanical</a></li>
+        <li><a href="#electrical">Electrical</a></li>
+        <li><a href="#software">Software</a></li>
         <li><a href="#bom">BOM</a></li>
     </ul>
 </nav>
 
 <header>
-    <h1>The Chrono-Voltaic Pinball Engine</h1>
-    <h2>Project: Let's Get Funky</h2>
+    <h1>Let's Get Funky</h1>
+    <h2>A Steampunk Pinball Experience</h2>
     <p>ME 218a Fall 2025 | Stanford University</p>
 </header>
 
@@ -223,66 +245,149 @@
             </div>
         </div>
     </section>
-
-    <section id="software">
-        <h3>5. Software Design</h3>
-        <p>The system runs on a <strong>PIC32MX170F256B</strong> using the Gen2 Events & Services Framework. The architecture is hierarchical, with the `PinballService` acting as the master controller for sub-services like Audio, LED, and Actuation.</p>
-
-                [cite_start]<p><em>Figure 1: System State Machine controlling the game flow [cite: 258-289].</em></p>
-
-        <h4>5.1 State Machine Logic</h4>
-        <p>The system behavior is defined by five primary states:</p>
+    
+    <section id="mechanical">
+        <h3>Mechanical Design</h3>
+        <p>Our "Temporal Entertainment Module" (TEM) embodies the industrial spirit of the 1800s. The chassis was modeled in OnShape and constructed primarily from <strong>1/4" plywood</strong>, laser-cut at Lab64 and assembled with wood glue.</p>
+        
+        <p><strong>Key Features:</strong></p>
         <ul>
-            <li><strong>WELCOME:</strong> The idle attraction state. [cite_start]It displays a welcome pattern and waits for the <code>START</code> button press[cite: 258, 293].</li>
-            [cite_start]<li><strong>READY:</strong> Upon initialization, the system resets the score and waits for the ball to be launched (<code>IR_LAUNCH</code>)[cite: 260, 297].</li>
-            <li><strong>GAME_IN_PLAY:</strong> The active state where the 60-second timer runs. It handles:
-                <ul>
-                    [cite_start]<li><strong>Scoring:</strong> Inputs from <code>IR_SCORE</code> and Piezo sensors add points and trigger audio/vibration feedback[cite: 265, 269].</li>
-                    [cite_start]<li><strong>Inactivity:</strong> If 20 seconds pass without input, the system transitions to <code>TIMEOUT</code>[cite: 328, 330].</li>
-                </ul>
-            </li>
-            [cite_start]<li><strong>TIMEOUT:</strong> A temporary state that plays an audio cue and waits 5 seconds before returning to <code>WELCOME</code>[cite: 286, 331].</li>
-            <li><strong>GAME_OVER:</strong> Triggered by <code>IR_LOSS</code> (after safety net) or the 60s timer. [cite_start]It dispenses reward gears and triggers the decorative gear animation[cite: 284, 316, 370].</li>
-        </ul>
-
-        <h4>5.2 Key Services</h4>
-        <ul>
-            [cite_start]<li><strong>IRSensorService:</strong> Polls the Launch, Score, and Loss sensors every 10ms, handling debouncing[cite: 257].</li>
-            [cite_start]<li><strong>LEDService:</strong> Manages the "Split Mode" display, updating the countdown timer on Module 1 while scrolling score text on Modules 2-4[cite: 361].</li>
-            [cite_start]<li><strong>GearDispensingService:</strong> Activates the servo motor to dispense physical gear tokens upon game completion[cite: 367].</li>
+            <li><strong>Chassis:</strong> A custom 50x50x100cm enclosure stained to resemble antique mahogany.</li>
+            <li><strong>Custom Components:</strong> Playfield characters, dials, and wire management covers were 3D printed using PLA.</li>
+            <li><strong>Actuation:</strong> Two servos control the mechanics—one for dispensing prize gears and one for the decorative gear mechanism.</li>
         </ul>
     </section>
 
     <section id="electrical">
-        <h3>4. Electrical Design</h3>
+        <h3>Electrical Design</h3>
         <p>The electrical system bridges the 3.3V logic of the PIC32 with high-power 5V peripherals.</p>
 
-                [cite_start]<p><em>Figure 2: Complete System Schematic [cite: 376-589].</em></p>
+        <img src="schematic.png" alt="Circuit Schematic" class="diagram-img">
         
-        <h4>4.1 Core Processing & Power</h4>
+        <h4>Core Processing & Power</h4>
         <ul>
-            [cite_start]<li><strong>Microcontroller:</strong> PIC32MX170F256B running at 20MHz[cite: 382].</li>
-            [cite_start]<li><strong>Logic Levels:</strong> A <code>74ACT244</code> Buffer/Line Driver is used to step up the 3.3V SPI signals (SCK, SS, SDO) to 5V for the LED Matrix[cite: 485, 569].</li>
+            <li><strong>Microcontroller:</strong> PIC32MX170F256B running at 20MHz.</li>
+            <li><strong>Power & Signal:</strong> 74ACT244 buffers are used to shift logic levels for the LED Matrix.</li>
         </ul>
 
-        <h4>4.2 Sensor Interface</h4>
+        <h4>Sensing & Feedback</h4>
         <ul>
-            [cite_start]<li><strong>IR Sensing:</strong> The system uses <code>TSSP58038</code> IR receiver modules (active low)[cite: 550]. [cite_start]The emitters are driven by <code>IR204A</code> LEDs controlled by N-Channel MOSFETs (Q1-Q3) pulsing at 38kHz[cite: 538, 540].</li>
-            [cite_start]<li><strong>Piezo Inputs:</strong> Piezo elements (Y1-Y3) are connected to analog inputs for force-sensitive scoring[cite: 428].</li>
+            <li><strong>Inputs:</strong> TSSP58038 IR receivers detect ball presence, while Piezo elements provide force-sensitive scoring data.</li>
+            <li><strong>Audio:</strong> An Adafruit Audio FX Mini Sound Board triggers background music and "Game Over" cues via UART.</li>
+            <li><strong>Haptics:</strong> Vibration motors provide tactile feedback when targets are struck.</li>
         </ul>
+    </section>
 
-        <h4>4.3 Actuation & Output</h4>
+    <section id="software">
+        <h3>Software Architecture</h3>
+        <p>The system runs on the Gen2 Events & Services Framework. The architecture is hierarchical, with the <code>PinballService</code> acting as the master controller.</p>
+
+        <img src="fsm.png" alt="Finite State Machine Diagram" class="diagram-img">
+
+        <h4>State Machine Logic</h4>
+        <p>The system behavior is defined by five primary states:</p>
         <ul>
-            [cite_start]<li><strong>Audio:</strong> An <code>Adafruit Sound Board</code> is triggered directly via the RB7 (Audio) pin[cite: 454, 518].</li>
-            [cite_start]<li><strong>Servos:</strong> Two servos control the mechanics—one for dispensing gears (Pin 14) and one for the decorative gear mechanism (Pin 15)[cite: 440, 450].</li>
-            [cite_start]<li><strong>Vibration:</strong> A dedicated vibration motor is driven by a MOSFET on Pin 11 to provide haptic feedback[cite: 449, 557].</li>
+            <li><strong>WELCOME:</strong> The idle attraction state. It displays a welcome pattern on the LED matrix.</li>
+            <li><strong>READY:</strong> Upon pressing the Start button, the system resets the score and waits for the ball launch.</li>
+            <li><strong>GAME_IN_PLAY:</strong> The active state where the 60-second timer runs. It handles scoring from IR/Piezo sensors and manages the 20-second inactivity timer.</li>
+            <li><strong>TIMEOUT:</strong> If the player walks away, the game enters a temporary timeout state before resetting.</li>
+            <li><strong>GAME_OVER:</strong> Triggered by losing the ball (after the 30s "Ball Save" period expires) or the game timer ending. This state triggers the gear dispenser.</li>
         </ul>
     </section>
 
     <section id="bom">
-        <h3>6. Bill of Materials</h3>
-        <p>Total spend remained under the $200 limit.</p>
-        <p><a href="https://docs.google.com/spreadsheets/d/1muiBZHbCsakAO4bEVL70Pqp21OFci2PAbMDRD0AnU0/edit?gid=0#gid=0" target="_blank">View Full BOM Spreadsheet</a></p>
+        <h3>Bill of Materials</h3>
+        <p>The total project cost was approximately <strong>$194.89</strong>, remaining under the $200 limit.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Count</th>
+                    <th>Supplier</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Hitec HS-322HD Servo</td>
+                    <td>2</td>
+                    <td>AMPS</td>
+                    <td>$38.00</td>
+                </tr>
+                <tr>
+                    <td>EG STARTS Arcade Button</td>
+                    <td>1</td>
+                    <td>SPDL</td>
+                    <td>$1.00</td>
+                </tr>
+                <tr>
+                    <td>Steel Pinball</td>
+                    <td>1</td>
+                    <td>SPDL</td>
+                    <td>$6.00</td>
+                </tr>
+                <tr>
+                    <td>Spring Assortment Kit</td>
+                    <td>3</td>
+                    <td>SPDL</td>
+                    <td>$8.00</td>
+                </tr>
+                <tr>
+                    <td>Hardware (Screws)</td>
+                    <td>14</td>
+                    <td>SPDL/AMPS</td>
+                    <td>$13.00</td>
+                </tr>
+                 <tr>
+                    <td>1/4" Plywood (2x4' and 4x8')</td>
+                    <td>4</td>
+                    <td>Home Depot</td>
+                    <td>$60.00</td>
+                </tr>
+                <tr>
+                    <td>PIC32MX170F256B</td>
+                    <td>1</td>
+                    <td>Lab Kit</td>
+                    <td>$23.00</td>
+                </tr>
+                <tr>
+                    <td>MAX7219 Dot Matrix</td>
+                    <td>1</td>
+                    <td>Lab Kit</td>
+                    <td>$9.00</td>
+                </tr>
+                <tr>
+                    <td>Adafruit Audio FX Mini</td>
+                    <td>1</td>
+                    <td>AMPS</td>
+                    <td>$15.00</td>
+                </tr>
+                <tr>
+                    <td>Adafruit Mono 2.5W Amp</td>
+                    <td>1</td>
+                    <td>AMPS</td>
+                    <td>$4.00</td>
+                </tr>
+                <tr>
+                    <td>Speaker (8 Ohm 1 Watt)</td>
+                    <td>1</td>
+                    <td>SPDL</td>
+                    <td>$2.00</td>
+                </tr>
+                 <tr>
+                    <td>Misc Electronics (LM339N, MCP6294)</td>
+                    <td>2</td>
+                    <td>Lab Kit</td>
+                    <td>$15.89</td>
+                </tr>
+                <tr>
+                    <td><strong>TOTAL</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>$194.89</strong></td>
+                </tr>
+            </tbody>
+        </table>
     </section>
 
 </div>
