@@ -193,7 +193,58 @@
         }
 
         tr:nth-child(even) { background-color: #f2f2f2; }
+        
+        /* PSEUDOCODE / DETAILS STYLES */
+        details.service-block {
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #f4f4f4;
+        }
+        
+        summary.service-title {
+            background-color: var(--dark-wood);
+            color: var(--brass);
+            padding: 12px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            list-style: none; /* Hide default arrow */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Custom arrow indicator */
+        summary.service-title::after {
+            content: '+';
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        details[open] summary.service-title::after {
+            content: '-';
+        }
+        
+        summary.service-title:hover {
+            background-color: #3e2b16;
+        }
+        
+        /* Remove default marker for Chrome/Safari */
+        summary.service-title::-webkit-details-marker {
+            display: none;
+        }
 
+        .pseudocode-box {
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            color: #333;
+            border-top: 2px solid var(--copper);
+            background-color: #fcfcfc;
+        }
 
         /* FOOTER */
         footer {
@@ -298,9 +349,205 @@
 
     <section id="software">
         <h3>Software Design</h3>
-        <p>The system runs on the Events & Services Framework using a hierarchical state machine approach.</p>
+        <p>The system runs on the Gen2 Events & Services Framework using a hierarchical state machine approach. Click on the services below to view the logical pseudocode.</p>
 
         <img src="fsm.png" alt="Finite State Machine Diagram" class="diagram-img">
+        
+
+[Image of Finite State Machine Diagram]
+
+
+        <details class="service-block">
+            <summary class="service-title">PinballService (Master State Machine)</summary>
+            <div class="pseudocode-box">
+Function RunPinballService(Event):
+  Switch CurrentState:
+    Case STATE_WELCOME:
+      If Event is START_BUTTON_PRESSED:
+        Reset Score to 0
+        Start Inactivity Timer (20s)
+        Transition to STATE_READY
+        Post "READY" to LED
+
+    Case STATE_READY:
+      If Event is LAUNCH_BUTTON or IR_LAUNCH:
+        Initialize Game Timer (60s)
+        Initialize Display Timer (1s)
+        Set LED Mode to SPLIT (Score + Timer)
+        Transition to STATE_GAME_IN_PLAY
+      If Event is TIMEOUT (Inactivity):
+        Start Timeout Delay Timer (5s)
+        Transition to STATE_TIMEOUT
+
+    Case STATE_GAME_IN_PLAY:
+      If Event is IR_SCORE or PIEZO_TRIPPED:
+        Increment Score
+        Reset Inactivity Timer
+      If Event is TIMER_EXPIRED (1 sec):
+        Decrement Game Time
+        Update Static LED Buffer (Timer digits)
+      If Event is GAME_OVER (Time up or Ball Lost):
+        Stop all Game Timers
+        Post ES_TEST_SERVO_DISPENSE (with Score)
+        Transition to STATE_GAME_OVER
+        Post "GAME OVER" to LED
+      If Event is INACTIVITY_TIMEOUT:
+        If Flipper is Held: Reset Timer (Keep Playing)
+        Else: Trigger GAME_OVER
+
+    Case STATE_GAME_OVER:
+      If Completion Timer Expires:
+        Transition to STATE_WELCOME
+        Post "WELCOME" to LED
+            </div>
+        </details>
+
+        <details class="service-block">
+            <summary class="service-title">LEDService (Display Driver)</summary>
+            <div class="pseudocode-box">
+Function RunLEDService(Event):
+  Switch CurrentState:
+    Case IDLE:
+      If Event is ADD_CHAR:
+        If Mode is FULL: Scroll entire buffer, add char to end
+        If Mode is SPLIT: Scroll modules 2-4 only, add char to module 2
+        Trigger UPDATE_ROW Event
+      If Event is UPDATE_STATIC_BUFFER:
+        Update module 1 (Timer) directly without scrolling
+
+    Case UPDATE:
+      If Event is UPDATE_ROW:
+        Call HAL function DM_TakeDisplayUpdateStep()
+        If HAL reports "Done":
+          Return to IDLE state
+        Else:
+          Re-post UPDATE_ROW to self (Keep pushing bits)
+            </div>
+        </details>
+
+        <details class="service-block">
+            <summary class="service-title">ServoService (Actuators)</summary>
+            <div class="pseudocode-box">
+Function RunServoService(Event):
+  If Event is INIT:
+    Set PWM Pulse Width to Middle (Neutral) for both servos
+
+  If Event is TEST_SERVO_DISPENSE:
+    Set PWM Pulse Width to Minimum (Push Gear)
+    Start Servo Timer (2 seconds)
+
+  If Event is TEST_SERVO_DECOR:
+    Set PWM Pulse Width to Target
+    Start Servo Timer (2 seconds)
+
+  If Event is TIMEOUT:
+    Set PWM Pulse Width back to Middle (Retract)
+            </div>
+        </details>
+
+        <details class="service-block">
+            <summary class="service-title">SoundService (Audio via UART)</summary>
+            <div class="pseudocode-box">
+Function RunSoundService(Event):
+  If Event is START_BUTTON_PRESSED:
+    Send UART Command: Play Track [START_SOUND]
+  
+  If Event is FLIPPER_PRESSED:
+    Send UART Command: Play Track [FLIPPER_SOUND]
+
+  If Event is SCORE or PIEZO_TRIPPED:
+    Send UART Command: Play Track [HIT_SOUND]
+
+Helper JQ6500_SendCommand:
+  Send 0x7E (Start Byte)
+  Send Length, Command, and Parameters
+  Send 0xEF (End Byte)
+            </div>
+        </details>
+
+        <details class="service-block">
+            <summary class="service-title">IRSensorService (Input Polling)</summary>
+            <div class="pseudocode-box">
+Function RunIRSensorService(Event):
+  If Event is TIMER_TIMEOUT (10ms Poll):
+    Read Pins (Launch, Score, Loss)
+    
+    For Each Sensor:
+      If Pin is HIGH (Beam Broken) AND State was LOW:
+        State = WAITING
+        Post Event (e.g., ES_IR_LAUNCH_TRIPPED) to Master
+      Else If Pin is LOW (Beam Clear):
+        State = LOW
+        
+    Restart Poll Timer (10ms)
+            </div>
+        </details>
+
+        <details class="service-block">
+            <summary class="service-title">PiezoService (Analog Input)</summary>
+            <div class="pseudocode-box">
+Function RunPiezoService(Event):
+  If Event is TIMER_TIMEOUT (10ms):
+    If NOT InCooldown:
+      Read ADC Value
+      If Value > THRESHOLD:
+        Post ES_PIEZO_TRIPPED to Master
+        Set InCooldown = TRUE
+        Start Cooldown Timer (150ms)
+    Restart Poll Timer
+    
+  If Event is COOLDOWN_TIMER_EXPIRED:
+    Set InCooldown = FALSE
+            </div>
+        </details>
+
+        <details class="service-block">
+            <summary class="service-title">VibrationService (Haptics)</summary>
+            <div class="pseudocode-box">
+Function RunVibrationService(Event):
+  If Event is ES_VIBRATION:
+    Set Output Pin HIGH (Motor On)
+    Start Duration Timer (150ms)
+    State = VIBRATING
+
+  If Event is TIMER_EXPIRED:
+    Set Output Pin LOW (Motor Off)
+    State = IDLE
+            </div>
+        </details>
+
+        <details class="service-block">
+            <summary class="service-title">DM_Display (Hardware Abstraction Layer)</summary>
+            <div class="pseudocode-box">
+Function DM_TakeInitDisplayStep():
+  Sequence through init states:
+  1. Send Shutdown Command
+  2. Clear Memory
+  3. Disable Code-B Decoding
+  4. Enable Scan Limit
+  5. Set Brightness
+  6. Wake Up (End Shutdown)
+
+Function DM_TakeDisplayUpdateStep():
+  Send one row of data to MAX7219 via SPI
+  Increment Row Counter
+  If Row Counter >= 8: Return TRUE (Frame Complete)
+  Else: Return FALSE
+            </div>
+        </details>
+
+        <details class="service-block">
+            <summary class="service-title">IREmitterService (Hardware Setup)</summary>
+            <div class="pseudocode-box">
+Function InitIREmitterService():
+  Configure Timer 3
+  Set Frequency to 38kHz
+  Map Output Channel to Pin RB13
+  Set Duty Cycle to 50%
+  Enable Output
+            </div>
+        </details>
+        
     </section>
 
     <section id="team">
