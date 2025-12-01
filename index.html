@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Chrono-Voltaic Pinball Engine | ME 218a</title>
+    <style>
+        /* STEAMPUNK THEME CSS */
+        :root {
+            --brass: #b5a642;
+            --copper: #b87333;
+            --dark-wood: #2b1d0e;
+            --parchment: #fdf5e6;
+            --gear-grey: #4a4a4a;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--parchment);
+            color: var(--dark-wood);
+            margin: 0;
+            line-height: 1.6;
+            background-image: repeating-linear-gradient(45deg, #fdf5e6 0, #fdf5e6 10px, #fcf0da 10px, #fcf0da 20px);
+        }
+
+        /* NAVIGATION */
+        nav {
+            background-color: var(--dark-wood);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 4px solid var(--brass);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav li { margin: 0; }
+
+        nav a {
+            display: block;
+            padding: 15px 20px;
+            color: var(--brass);
+            text-decoration: none;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background-color: var(--copper);
+            color: #fff;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: radial-gradient(circle, var(--dark-wood), #000);
+            color: var(--brass);
+            border-bottom: 5px solid var(--copper);
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        header h2 {
+            font-family: 'Courier New', monospace;
+            color: #fff;
+            font-size: 1.5rem;
+        }
+
+        /* CONTENT SECTIONS */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        section {
+            background: #fff;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 2px solid var(--dark-wood);
+            box-shadow: 10px 10px 0px var(--gear-grey);
+            position: relative;
+        }
+
+        /* Corner screws effect */
+        section::before, section::after {
+            content: '+';
+            position: absolute;
+            color: var(--brass);
+            font-weight: bold;
+            font-size: 20px;
+        }
+        section::before { top: 5px; left: 10px; }
+        section::after { top: 5px; right: 10px; }
+
+        h3 {
+            border-bottom: 3px double var(--copper);
+            padding-bottom: 10px;
+            color: var(--dark-wood);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h4 { color: var(--copper); margin-top: 25px;}
+
+        /* TABLE STYLES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            border: 1px solid var(--dark-wood);
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--dark-wood);
+            color: var(--brass);
+        }
+
+        tr:nth-child(even) { background-color: #f2f2f2; }
+
+        /* CODE BLOCKS */
+        pre {
+            background: #222;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 5px solid var(--brass);
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--dark-wood);
+            color: #888;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <ul>
+        <li><a href="#executive">Summary</a></li>
+        <li><a href="#functional">Functional</a></li>
+        <li><a href="#mechanical">Mechanical</a></li>
+        <li><a href="#electrical">Electrical</a></li>
+        <li><a href="#software">Software</a></li>
+        <li><a href="#bom">BOM</a></li>
+        <li><a href="#gems">Gems of Wisdom</a></li>
+    </ul>
+</nav>
+
+<header>
+    <h1>The Chrono-Voltaic Pinball Engine</h1>
+    <h2>Project: Let's Get Funky</h2>
+    <p>ME 218a Fall 2025 | Stanford University</p>
+</header>
+
+<div class="container">
+
+    <section id="executive">
+        <h3>1. Executive Summary</h3>
+        <p>Trapped in the 19th century, our team developed the <strong>Chrono-Voltaic Pinball Engine</strong>, a "Temporal Entertainment Module" (TEM) designed to bridge Victorian aesthetics with modern mechatronics. The device is a steampunk-themed pinball machine where the user navigates an "Aether Sphere" (steel ball) to accumulate temporal energy (score). The system demonstrates robust event-driven programming, electromechanical actuation, and non-contact sensing, culminating in the automated dispensing of "Time Gears" as a reward.</p>
+        </section>
+
+    <section id="functional">
+        <h3>2. Functional Description</h3>
+        <p>The machine operates as a single-player game:</p>
+        <ul>
+            <li><strong>Welcome Mode:</strong> Upon power-up, the machine displays a scrolling "WELCOME!" message accompanied by theme music.</li>
+            <li><strong>Initialization:</strong> The user presses a Start button. The machine flashes "READY".</li>
+            <li><strong>Gameplay:</strong> The user launches the ball. The LED matrix splits into a score display and a countdown timer.</li>
+            <li><strong>Ball Save:</strong> To ensure fair play, the game implements a "Safety Net" logic where the game cannot end due to a lost ball within the first 30 seconds.</li>
+            <li><strong>Reward:</strong> Based on the score, a servo mechanism dispenses 1 to 3 laser-cut gears to the user[cite: 44].</li>
+        </ul>
+    </section>
+
+    <section id="mechanical">
+        <h3>3. Mechanical Design</h3>
+        <h4>3.1 Structure and Aesthetics</h4>
+        <p>The chassis is constructed from 3mm laser-cut plywood, stained to resemble antique mahogany. The playfield is inclined at 6.5 degrees to ensure consistent ball gravity dynamics. The total volume fits within the 50x50x100cm limit[cite: 81].</p>
+        
+        <h4>3.2 Actuation Mechanisms</h4>
+        <ul>
+            <li><strong>Flippers:</strong> Two solenoid-driven flippers provide the primary user interaction.</li>
+            <li><strong>Gear Dispenser:</strong> A rack-and-pinion mechanism driven by a standard servo (SERVO_CHANNEL_DISPENSE). The gears are stacked in a gravity-fed hopper.</li>
+        </ul>
+        </section>
+
+    <section id="electrical">
+        <h3>4. Electrical Design</h3>
+        <p>The system is controlled by a single PIC32MX170F256B microcontroller[cite: 62].</p>
+        
+        <h4>4.1 Sensor Interface</h4>
+        <ul>
+            <li><strong>IR Break Beams (Digital):</strong> We utilized three IR sensor pairs (Launch, Score, Loss). Driven by a 38kHz PWM signal generated by Timer 3.</li>
+            <li><strong>Piezo Sensor (Analog):</strong> A piezoelectric element is mounted to the bumper target. <code>PiezoService.c</code> reads the ADC value to detect impacts[cite: 69].</li>
+        </ul>
+
+        <h4>4.2 Output Interface</h4>
+        <ul>
+            <li><strong>LED Matrix:</strong> Four 8x8 MAX7219 modules daisy-chained via SPI.</li>
+            <li><strong>Audio:</strong> A JQ6500 MP3 module controlled via UART2.</li>
+        </ul>
+        </section>
+
+    <section id="software">
+        <h3>5. Software Design</h3>
+        <p>The software utilizes the Gen2 Events & Services Framework.</p>
+        <h4>5.1 State Machine Organization</h4>
+        <p>The master logic resides in <code>PinballService.c</code>:</p>
+        <pre>
+// Pseudo-code for State Logic
+switch (CurrentState) {
+    case STATE_READY:
+        if (Event == ES_BALL_LAUNCHED) {
+            StartGameTimer();
+            NextState = STATE_GAME_IN_PLAY;
+        }
+        break;
+    
+    case STATE_GAME_IN_PLAY:
+        if (Event == ES_TIMER_EXPIRED) {
+            TriggerGameOver();
+        }
+        if (Event == ES_IR_LOST_TRIPPED) {
+            if (GameTimeLeft <= 30) {
+                 TriggerGameOver();
+            } else {
+                 RespawnBall(); // Safety Net
+            }
+        }
+        break;
+}
+        </pre>
+        <h4>5.2 LED Management</h4>
+        <p>We implemented a "Split Mode" driver where the display logically splits into a "Left Zone" (3 modules) for scrolling score and "Right Zone" (1 module) for static timer.</p>
+    </section>
+
+    <section id="bom">
+        <h3>6. Bill of Materials</h3>
+        <p>Total spend remained under the $200 limit[cite: 13].</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Item Description</th>
+                    <th>Unit Cost</th>
+                    <th>Total Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Microcontroller</td>
+                    <td>PIC32MX170F256B (Lab Kit)</td>
+                    <td>$0.00</td>
+                    <td>$0.00</td>
+                </tr>
+                <tr>
+                    <td>Display</td>
+                    <td>MAX7219 Dot Matrix Module</td>
+                    <td>$8.99</td>
+                    <td>$8.99</td>
+                </tr>
+                <tr>
+                    <td>Sensors</td>
+                    <td>Piezo Element</td>
+                    <td>$0.95</td>
+                    <td>$0.95</td>
+                </tr>
+                <tr>
+                    <td>Audio</td>
+                    <td>JQ6500 MP3 Module</td>
+                    <td>$4.50</td>
+                    <td>$4.50</td>
+                </tr>
+                <tr>
+                    <td>Actuators</td>
+                    <td>12V Solenoid (Push Type) x2</td>
+                    <td>$6.95</td>
+                    <td>$13.90</td>
+                </tr>
+                <tr>
+                    <td>Materials</td>
+                    <td>1/8" Birch Plywood / Acrylic</td>
+                    <td>Various</td>
+                    <td>$30.00</td>
+                </tr>
+                <tr>
+                    <td><strong>TOTAL</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>$81.34</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="gems">
+        <h3>7. Gems of Wisdom</h3>
+        <ul>
+            <li><strong>The "Floating Pin" Trap:</strong> Our game initially jumped straight to "READY" upon power-up. We discovered the Start Button pin was floating. Always use hardware or internal pull-up/down resistors on input pins.</li>
+            <li><strong>LED Smearing:</strong> If your scrolling text looks like a garbled blob, check your shift logic! Our scroll shift amount (4 pixels) did not match our character width (6 pixels).</li>
+            <li><strong>Module Orientation:</strong> The MAX7219 modules have a specific orientation. If your text scrolls upwards instead of sideways, you likely need to rotate the modules 90 degrees physically.</li>
+        </ul>
+    </section>
+
+</div>
+
+<footer>
+    <p><strong>Team:</strong> Let's Get Funky | Maroussia Walckiers (BS-BME '25, MSME '26)</p>
+    <p>ME 218a: Smart Product Design Fundamentals</p>
+</footer>
+
+</body>
+</html>
