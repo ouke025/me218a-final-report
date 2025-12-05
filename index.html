@@ -23,7 +23,7 @@
             background-image: repeating-linear-gradient(45deg, #fdf5e6 0, #fdf5e6 10px, #fcf0da 10px, #fcf0da 20px);
         }
 
-        /* NAVIGATION */
+        /* NAVIGATION & TABS */
         nav {
             background-color: var(--dark-wood);
             position: sticky;
@@ -44,20 +44,28 @@
 
         nav li { margin: 0; }
 
-        nav a {
+        nav button {
+            background: none;
+            border: none;
             display: block;
             padding: 15px 20px;
             color: var(--brass);
-            text-decoration: none;
             font-family: 'Courier New', monospace;
             font-weight: bold;
             text-transform: uppercase;
-            transition: background 0.3s;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
         }
 
-        nav a:hover {
+        nav button:hover {
             background-color: var(--copper);
             color: #fff;
+        }
+
+        nav button.active {
+            background-color: var(--brass);
+            color: var(--dark-wood);
         }
 
         /* HEADER */
@@ -86,6 +94,21 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 40px 20px;
+        }
+
+        /* Tab Content Logic */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         section {
@@ -117,6 +140,7 @@
         }
 
         h4 { color: var(--copper); margin-top: 25px; font-weight: bold;}
+        h5 { color: var(--gear-grey); margin-top: 20px; font-weight: bold; font-style: italic;}
 
         /* LISTS */
         ul.styled-list {
@@ -148,29 +172,97 @@
         .team-member h5 { margin: 10px 0 5px 0; font-size: 1.1rem; }
         .team-member p { margin: 0; font-size: 0.9rem; color: #666; }
 
-        /* VIDEO PLACEHOLDER */
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
-            height: 0;
-            background: #000;
-            border: 4px solid var(--brass);
-        }
-        
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
         /* DIAGRAM IMAGES */
         .diagram-img {
             width: 100%;
             height: auto;
             border: 2px solid var(--gear-grey);
             margin: 20px 0;
+        }
+
+        .full-width-diagram {
+            width: 100%;
+            height: auto;
+            border: 2px solid var(--gear-grey);
+            margin: 20px 0;
+            background-color: #fff;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+            align-items: start; /* Align items at the top */
+        }
+
+        .gallery img {
+            width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            border: 2px solid var(--gear-grey);
+            background-color: transparent;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: block; /* Remove inline gap */
+        }
+
+        .gallery img:hover {
+            transform: scale(1.02);
+            border-color: var(--copper);
+        }
+
+        /* Lightbox (Modal) */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+        }
+
+        .lightbox-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 85vh;
+            border: 4px solid var(--brass);
+            box-shadow: 0 0 20px #000;
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close-lightbox:hover,
+        .close-lightbox:focus {
+            color: var(--brass);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        /* Caption */
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+            font-family: 'Courier New', monospace;
         }
         
         /* TABLE STYLES */
@@ -236,6 +328,80 @@
             display: none;
         }
 
+        /* --- MECHANICAL DROPDOWNS --- */
+        details.mech-block {
+            margin-bottom: 15px;
+            border: 1px solid var(--dark-wood);
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        
+        summary.mech-title {
+            background-color: var(--dark-wood);
+            color: var(--brass);
+            padding: 12px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        
+        summary.mech-title::after {
+            content: '+';
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        details[open] summary.mech-title::after {
+            content: '-';
+        }
+        
+        summary.mech-title::-webkit-details-marker {
+            display: none;
+        }
+
+        .mech-content {
+            padding: 20px;
+            border-top: 2px solid var(--brass);
+        }
+
+        /* --- OVERVIEW GALLERY --- */
+        .overview-gallery {
+            /* display: flex; */
+            /* flex-wrap: wrap; */
+            /* gap: 30px; */
+            /* justify-content: center; */
+            /* align-items: center; */
+            /* margin: 30px 0; */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .overview-single-image {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .overview-single-image img {
+            max-width: 100%;
+            height: auto;
+            border: 4px solid var(--dark-wood);
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+
+        .overview-single-image img:hover {
+            transform: scale(1.02);
+        }
+
         .pseudocode-box {
             padding: 15px;
             font-family: 'Courier New', monospace;
@@ -244,6 +410,7 @@
             color: #333;
             border-top: 2px solid var(--copper);
             background-color: #fcfcfc;
+            overflow-x: auto;
         }
 
         /* FOOTER */
@@ -260,157 +427,347 @@
 
 <nav>
     <ul>
-        <li><a href="#overview">Overview</a></li>
-        <li><a href="#interaction">Interaction</a></li>
-        <li><a href="#mechanical">Mechanical</a></li>
-        <li><a href="#electrical">Electrical</a></li>
-        <li><a href="#software">Software</a></li>
-        <li><a href="#team">Team</a></li>
-        <li><a href="#bom">BOM</a></li>
-        <li><a href="#gems">Gems</a></li>
+        <li><button class="tab-link active" onclick="openTab(event, 'overview')">Overview</button></li>
+        <li><button class="tab-link" onclick="openTab(event, 'interaction')">Interaction</button></li>
+        <li><button class="tab-link" onclick="openTab(event, 'mechanical')">Mechanical</button></li>
+        <li><button class="tab-link" onclick="openTab(event, 'electrical')">Electrical</button></li>
+        <li><button class="tab-link" onclick="openTab(event, 'software')">Software</button></li>
+        <li><button class="tab-link" onclick="openTab(event, 'team')">Team</button></li>
+        <li><button class="tab-link" onclick="openTab(event, 'bom')">BOM</button></li>
+        <li><button class="tab-link" onclick="openTab(event, 'gems')">Gems</button></li>
     </ul>
 </nav>
 
 <header>
     <h1>Let's Get Funky</h1>
     <h2>A Steampunk-Themed Carnival Game</h2>
-    <p>ME 218a Fall 2025 | Stanford University</p>
+    <p>Team 14 | ME218A Autumn 2025 | Stanford University</p>
 </header>
 
 <div class="container">
 
-    <section id="video">
-        <h3>System Demonstration</h3>
-        <p>Watch the "Let's Get Funky" engine in operation.</p>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/PLACEHOLDER_ID" title="Project Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-    </section>
+    <!-- OVERVIEW TAB -->
+    <div id="overview" class="tab-content active">
+        <section>
+            <h3>Project Description</h3>
+            
+            <div class="overview-single-image">
+                <img src="img/home_1.jpg" alt="Let's Get Funky - Team Photo">
+            </div>
 
-    <section id="overview">
-        <h3>Project Description</h3>
-        <p>Our team was tasked to design and build a Steampunk-Themed Carnival Game, a "Temporal Entertainment Module" (TEM), that bridges the gap between past and future. From this, we present "Let's Get Funky," a mechanical pinball machine embodying the industrial spirit of the 1800s.</p>
-        
-        <h4>How it Works</h4>
-        <p>When powered on, Let's Get Funky initializes in a WELCOME mode shown on the LED display. Once the START button is pressed, the system transitions to the READY state. The player initiates gameplay by pulling the LAUNCH plunger. A sensor detects the ball's entry into the playfield, triggering the ACTIVE state.</p>
-        
-        <p>During the game, a 60-second timer counts down. Players must use the flippers to strike targets or navigate the ramp to accumulate points. The points for hitting the target are force sensitive, the harder you hit it, the more points you get.</p>
-        
-        <p>To accommodate difficulty, the system includes a "Ball Save" feature: if the ball drains within the first 30 seconds, it can be returned to play. After 30 seconds, losing the ball results in an immediate GAME OVER.</p>
-        
-        <p>The system monitors user input for inactivity. If no activity is detected for 20 seconds—defined as staying in the READY state without launching, or in the ACTIVE state without scoring or losing the ball—the game automatically resets to the WELCOME state.</p>
-    </section>
+            <p>Our team was tasked to design and build a Steampunk-Themed Carnival Game, a "Temporal Entertainment Module" (TEM), that bridges the gap between past and future. From this, we present "Let's Get Funky," a mechanical pinball machine embodying the industrial spirit of the 1800s.</p>
+            
+            <div class="overview-single-image">
+                <img src="img/home_2.jpg" alt="Let's Get Funky - CAD Model">
+            </div>
+            
+            <h4>How it Works</h4>
+            <p>When powered on, Let's Get Funky initializes in a WELCOME mode shown on the LED display. Once the START button is pressed, the system transitions to the READY state. The player initiates gameplay by pulling the LAUNCH plunger. A sensor detects the ball's entry into the playfield, triggering the ACTIVE state.</p>
+            
+            <p>During the game, a 60-second timer counts down. Players must use the flippers to strike targets or navigate the ramp to accumulate points. The points for hitting the target are force sensitive, the harder you hit it, the more points you get.</p>
+            
+            <p>To accommodate difficulty, the system includes a "Ball Save" feature: if the ball drains within the first 30 seconds, it can be returned to play. After 30 seconds, losing the ball results in an immediate GAME OVER.</p>
+            
+            <p>The system monitors user input for inactivity. If no activity is detected for 20 seconds—defined as staying in the READY state without launching, or in the ACTIVE state without scoring or losing the ball—the game automatically resets to the WELCOME state.</p>
+        </section>
+    </div>
 
-    <section id="interaction">
-        <h3>User Interaction</h3>
-        
-        <h4>User Inputs</h4>
-        <p>The game offers 4 modes of user interaction. After pressing the start button to start the game, the user launches the ball, uses the flippers and hits targets to gain points until the ball is lost.</p>
-        <ul class="styled-list">
-            <li><strong>Start button:</strong> Button to start the game.</li>
-            <li><strong>Flippers:</strong> Buttons to move the flippers.</li>
-            <li><strong>Target hits:</strong> Targets to gain points.</li>
-            <li><strong>Ball sensing:</strong> Sensors for launched, lost and slide ball.</li>
-        </ul>
-        <p></p>
+    <!-- INTERACTION TAB -->
+    <div id="interaction" class="tab-content">
+        <section>
+            <h3>User Interaction</h3>
+            
+            <h4>User Inputs</h4>
+            <p>The game offers 4 modes of user interaction. After pressing the start button to start the game, the user launches the ball, uses the flippers and hits targets to gain points until the ball is lost.</p>
+            <ul class="styled-list">
+                <li><strong>Start button:</strong> Button to start the game.</li>
+                <li><strong>Flippers:</strong> Buttons to move the flippers.</li>
+                <li><strong>Target hits:</strong> Targets to gain points.</li>
+                <li><strong>Ball sensing:</strong> Sensors for launched, lost and slide ball.</li>
+            </ul>
+            <p></p>
+    
+            <h4>User Feedback</h4>
+            <p>The game provides feedback through three channels:</p>
+            <ul class="styled-list">
+                <li><strong>Visually:</strong> The LED display indicates the game mode, remaining time, and score.</li>
+                <li><strong>Auditorily:</strong> The game plays thematic music during gameplay and a specific alert to signal the end of the round.</li>
+                <li><strong>Haptically:</strong> The player receives vibrational feedback whenever a target is hit, incentivizing strong impacts and confirming scores.</li>
+            </ul>
+            <p></p>
+        </section>
+    </div>
 
-        <h4>User Feedback</h4>
-        <p>The game provides feedback through three channels:</p>
-        <ul class="styled-list">
-            <li><strong>Visually:</strong> The LED display indicates the game mode, remaining time, and score.</li>
-            <li><strong>Auditorily:</strong> The game plays thematic music during gameplay and a specific alert to signal the end of the round.</li>
-            <li><strong>Haptically:</strong> The player receives vibrational feedback whenever a target is hit, incentivizing strong impacts and confirming scores.</li>
-        </ul>
-        <p></p>
-    </section>
+    <!-- MECHANICAL TAB -->
+    <div id="mechanical" class="tab-content">
+        <section>
+            <h3>Mechanical Design</h3>
+            <p>The mechanical system was developed in parallel to the electrical and software aspects of the project. The design goals focused on two critical requirements: component integration and player ergonomics.</p>
+            
+            <p>The game was modeled using OnShape and manufactured with the help of Lab64 and other on-campus facilities. The enclosure was laser cut from 1/8" plywood and 1/4" plywood, and assembled using wood glue. All other custom components (i.e. the flippers, plunger, slide, and gear dispenser) were 3D printed out of PLA.</p>
+    
+            <details class="mech-block">
+                <summary class="mech-title">Game Enclosure</summary>
+                <div class="mech-content">
+                    <p>Forming the bulk of the mechanical design, the primary enclosure provides the main structural housing. It was fabricated via laser cutting of 1/8'' and 1/4'' plywood panels, incorporating specific cutouts for decorative elements, internal walls, and precise mounting points for the flippers and gear dispenser.</p>
+                    <div class="gallery">
+                        <img src="img/enclosure_1.jpg" alt="Enclosure 1">
+                        <img src="img/enclosure_2.jpg" alt="Enclosure 2">
+                    </div>
+                </div>
+            </details>
+    
+            <details class="mech-block">
+                <summary class="mech-title">Gear Dispenser</summary>
+                <div class="mech-content">
+                    <p>The gear dispenser mechanism is designed to manage a stacked inventory of reward gears. It utilizes a servo motor, pushing the bottom gear out of the chassis while maintaining the vertical stack integrity, ensuring precise, sequential dispensing of personalized amounts. This part of the mechanism was 3D printed with PLA.</p>
+                    <div class="gallery">
+                        <img src="img/gear_dispenser_1.jpg" alt="Gear Dispenser 1">
+                        <img src="img/gear_dispenser_2.jpg" alt="Gear Dispenser 2">
+                    </div>
+                    
+                    <p>The dispensing hook was custom-designed to interface directly with a Hitec HS-322HD Standard Heavy Duty Servo. This coupling provides the necessary torque and controlled linear motion required to push the gears sequentially, initiating the gravity-fed reward delivery.</p>
+                    <div class="gallery drawings">
+                        <img src="img/gear_drawing_1.jpg" alt="Gear Drawing 1">
+                        <img src="img/gear_drawing_2.jpg" alt="Gear Drawing 2">
+                    </div>
+                </div>
+            </details>
+            
+            <details class="mech-block">
+                <summary class="mech-title">Gear Collector</summary>
+                <div class="mech-content">
+                    <div class="gallery">
+                        <img src="img/gear_collector.jpg" alt="Gear Collector">
+                    </div>
+                </div>
+            </details>
+    
+            <details class="mech-block">
+                <summary class="mech-title">Plunger</summary>
+                <div class="mech-content">
+                    <p>This plunger was designed to ensure tight fit and accommodation of the 20-degree incline of the platform compared to a vertical wall. A non-circular shape was also added to make sure it would not turn on itself.</p>
+                    <div class="gallery">
+                        <img src="img/plunger_1.jpg" alt="Plunger 1">
+                        <img src="img/plunger_2.jpg" alt="Plunger 2">
+                    </div>
+                    <div class="gallery drawings">
+                        <img src="img/plunger_drawing_1.jpg" alt="Plunger Drawing 1">
+                        <img src="img/plunger_drawing_2.jpg" alt="Plunger Drawing 2">
+                    </div>
+                    
+                    <h5>Plunger Accommodator</h5>
+                    <div class="gallery">
+                        <img src="img/plunger_accomm_1.jpg" alt="Plunger Accommodator 1">
+                        <img src="img/plunger_accomm_2.jpg" alt="Plunger Accommodator 2">
+                    </div>
+                </div>
+            </details>
+    
+            <details class="mech-block">
+                <summary class="mech-title">Flippers</summary>
+                <div class="mech-content">
+                    <p>The flippers were designed to work completely mechanically. The flipper buttons get linearly pushed and push down the extension of the flippers making them move up and down to create torque. The holes in the flippers allow for screws and springs to ensure secured mounting to the platform.</p>
+                    <div class="gallery">
+                        <img src="img/flippers_1.jpg" alt="Flippers 1">
+                        <img src="img/flippers_2.jpg" alt="Flippers 2">
+                    </div>
+                </div>
+            </details>
+    
+            <details class="mech-block">
+                <summary class="mech-title">Flipper Buttons & Holders</summary>
+                <div class="mech-content">
+                    <div class="gallery">
+                        <img src="img/flipper_btn_1.jpg" alt="Flipper Button">
+                        <img src="img/flipper_holder_1.jpg" alt="Flipper Holder 1">
+                        <img src="img/flipper_holder_2.jpg" alt="Flipper Holder 2">
+                    </div>
+                </div>
+            </details>
+    
+            <details class="mech-block">
+                <summary class="mech-title">Slide</summary>
+                <div class="mech-content">
+                    <div class="gallery">
+                        <img src="img/slide_1.jpg" alt="Slide 1">
+                        <img src="img/slide_2.jpg" alt="Slide 2">
+                    </div>
+                </div>
+            </details>
+    
+            <details class="mech-block">
+                <summary class="mech-title">Gear Motor Holder</summary>
+                <div class="mech-content">
+                    <div class="gallery">
+                        <img src="img/gear_motor_holder.jpg" alt="Gear Motor Holder">
+                    </div>
+                </div>
+            </details>
+    
+            <details class="mech-block">
+                <summary class="mech-title">Decorative Gears</summary>
+                <div class="mech-content">
+                    <p>These gears are driven by the secondary motor and rotate to provide visual interest and "steampunk" aesthetic during operation.</p>
+                    <div class="gallery">
+                        <img src="img/decorative_gears.jpg" alt="Decorative Gears">
+                    </div>
+                </div>
+            </details>
+        </section>
+    </div>
 
-    <section id="mechanical">
-        <h3>Mechanical Design</h3>
-        <p>The mechanical system was developed in parallel to the electrical and software aspects of the project. The design goals focused on two critical requirements: component integration and player ergonomics.</p>
-        
-        <p>The game was modeled using OnShape and manufactured with the help of Lab64 and other on-campus facilities. The enclosure was laser cut from 1/8" plywood and 1/4" plywood, and assembled using wood glue.</p>
-        
-        <p>All other custom components (i.e. the flippers, plunger, slide, and gear dispenser) were 3D printed out of PLA.</p>
-    </section>
+    <!-- ELECTRICAL TAB -->
+    <div id="electrical" class="tab-content">
+        <section>
+            <h3>Electrical Design</h3>
+            <img src="img/schematic.png" alt="Circuit Schematic" class="full-width-diagram">
+            
+            <p>The electrical system bridges the 3.3V logic of the PIC32 with high-power 5V peripherals. Key components include:</p>
+            <ul class="styled-list">
+                <li><strong>Microcontroller:</strong> PIC32MX170F256B running at 20MHz.</li>
+                <li><strong>Sensors:</strong> TSSP58038 IR receivers for ball tracking and Piezo elements (generic 27mm Piezo Discs) for force-sensitive targets.</li>
+                <li><strong>Actuators:</strong> Servos for gear dispensing and DC motors for vibration feedback.</li>
+                <li><strong>Audio:</strong> Adafruit Audio FX Mini Soundboard (WAV/OGG Trigger - 2MB Flash) with MAX98306 amplifier.</li>
+                <li><strong>Drivers:</strong> IRF520 MOSFETs to drive high-current loads like motors and solenoids.</li>
+            </ul>
+            
+            <h4>Audio Connection</h4>
+            <div class="gallery">
+                <img src="img/electrical_conn.jpg" alt="Audio Connection">
+            </div>
+        </section>
+    </div>
 
-    <section id="electrical">
-        <h3>Electrical Design</h3>
-        <img src="schematic.png" alt="Circuit Schematic" class="diagram-img">
-        
-        <p>The electrical system bridges the 3.3V logic of the PIC32 with high-power 5V peripherals. Key components include:</p>
-        <ul class="styled-list">
-            <li><strong>Microcontroller:</strong> PIC32MX170F256B running at 20MHz.</li>
-            <li><strong>Sensors:</strong> TSSP58038 IR receivers for ball tracking and Piezo elements for force-sensitive targets.</li>
-            <li><strong>Actuators:</strong> Servos for gear dispensing and DC motors for vibration feedback.</li>
-            <li><strong>Audio:</strong> JQ6500 Voice Module for sound effects.</li>
-            <li><strong>Drivers:</strong> IRF520 MOSFETs to drive high-current loads like motors and solenoids.</li>
-        </ul>
-    </section>
-
-    <section id="software">
-        <h3>Software Design</h3>
-        <p>The system runs on the Gen2 Events & Services Framework using a hierarchical state machine approach. Click on the services below to view the logical pseudocode.</p>
-
-        <img src="fsm.png" alt="Finite State Machine Diagram" class="diagram-img">
-        
-
-[Image of Finite State Machine Diagram]
-
-
-        <details class="service-block">
-            <summary class="service-title">PinballService (Master State Machine)</summary>
-            <div class="pseudocode-box">
+    <!-- SOFTWARE TAB -->
+    <div id="software" class="tab-content">
+        <section>
+            <h3>Software Design</h3>
+            <p>The system runs on the Events & Services Framework using a hierarchical state machine approach. The software is organized into services that handle specific hardware or logic components.</p>
+            <p>View the full source code on <a href="https://bitbucket.org/me218_ouke025/project/src/master/" target="_blank">Bitbucket</a>.</p>
+    
+            <img src="img/fsm.png" alt="Finite State Machine Diagram" class="full-width-diagram">
+            
+            <h4>Software Architecture</h4>
+            <p>The software is event-driven. Event checkers poll input pins and timers post timeout events, which are consumed by the services below. The pseudocode highlights the critical logic flow.</p>
+            
+            <details class="service-block">
+                <summary class="service-title">PinballService (Master State Machine)</summary>
+                <div class="pseudocode-box">
 Function RunPinballService(Event):
   Switch CurrentState:
+    Case STATE_STARTUP:
+      // Wait for hardware to settle
+      If Event is TIMEOUT(COMPLETION_TIMER):
+        Transition to STATE_WELCOME
+
     Case STATE_WELCOME:
-      If Event is START_BUTTON_PRESSED:
+      If Event is ES_START_BUTTON_PRESSED:
         Reset Score to 0
         Start Inactivity Timer (20s)
+        Post ES_START_BUTTON_PRESSED to SoundService (Start BGM)
         Transition to STATE_READY
-        Post "READY" to LED
+        Update LED to "READY" (Flash Mode)
 
     Case STATE_READY:
       If Event is LAUNCH_BUTTON or IR_LAUNCH:
         Initialize Game Timer (60s)
         Initialize Display Timer (1s)
-        Set LED Mode to SPLIT (Score + Timer)
         Transition to STATE_GAME_IN_PLAY
+        Update LED to Split Mode (Left: "ENJOY!", Right: Timer)
       If Event is TIMEOUT (Inactivity):
-        Start Timeout Delay Timer (5s)
+        Start Completion Timer (5s)
         Transition to STATE_TIMEOUT
+        Update LED to "NO ACTIVITY"
 
     Case STATE_GAME_IN_PLAY:
       If Event is IR_SCORE or PIEZO_TRIPPED:
-        Increment Score
+        Increment Score (Variable based on piezo intensity)
         Reset Inactivity Timer
-      If Event is TIMER_EXPIRED (1 sec):
+        Post ES_PIEZO_TRIPPED to SoundService
+        Post ES_VIBRATION to VibrationService
+        Post ES_TEST_SERVO_DECOR to ServoService
+        
+      If Event is TIMEOUT (Display Timer - 1s):
         Decrement Game Time
-        Update Static LED Buffer (Timer digits)
-      If Event is GAME_OVER (Time up or Ball Lost):
-        Stop all Game Timers
-        Post ES_TEST_SERVO_DISPENSE (with Score)
+        Update LED Timer
+        If GameTime <= 10s: Flash LED Timer (Urgency)
+        
+      If Event is GAME_OVER (Time up or Ball Lost > 30s):
+        Stop Game Timers
+        Post ES_GAME_OVER_SOUND to SoundService
+        Post ES_TEST_SERVO_DISPENSE to ServoService (Dispense Gears)
         Transition to STATE_GAME_OVER
-        Post "GAME OVER" to LED
+        Update LED to Scroll "GAME OVER SCORE: [Score]"
+        
       If Event is INACTIVITY_TIMEOUT:
-        If Flipper is Held: Reset Timer (Keep Playing)
-        Else: Trigger GAME_OVER
+        If FlipperHeld(): 
+           Reset Inactivity Timer (Player is holding flipper)
+        Else: 
+           Trigger GAME_OVER sequence
 
     Case STATE_GAME_OVER:
-      If Completion Timer Expires:
+    Case STATE_TIMEOUT:
+      // Wait for completion timer (showing score or message)
+      If Event is TIMEOUT (Completion Timer):
+        Reset Sound and Servos
         Transition to STATE_WELCOME
-        Post "WELCOME" to LED
-            </div>
-        </details>
+        Update LED to "WELCOME!"
+                </div>
+            </details>
+    
+            <details class="service-block">
+                <summary class="service-title">IREmitterService (Hardware PWM)</summary>
+                <div class="pseudocode-box">
+Function RunIREmitterService(Event):
+  // "Set it and forget it" service
+  If Event is INIT:
+    Configure Timer3 for 38kHz
+    Set PWM Duty Cycle to 50%
+    Map PWM Output to RB13
+    Start PWM Timer
+                </div>
+            </details>
 
-        <details class="service-block">
-            <summary class="service-title">LEDService (Display Driver)</summary>
-            <div class="pseudocode-box">
+            <details class="service-block">
+                <summary class="service-title">IRSensorService (Input Debouncing)</summary>
+                <div class="pseudocode-box">
+Function RunIRSensorService(Event):
+  // Polled every 10ms
+  If Event is TIMER_TIMEOUT (10ms Poll):
+    Read Pins (Launch, Score, Loss)
+    
+    // Example for Launch Sensor (Active High Logic: 1 = Beam Broken)
+    // State Logic:
+    //   DebounceLow: Beam is Clear
+    //   DebounceWaiting: Beam Blocked (Ball Present)
+    
+    If Pin is HIGH (1) AND State is DebounceLow:
+        // Rising Edge Detected
+        State = DebounceWaiting
+        Post ES_IR_LAUNCH_TRIPPED to Master Service
+        
+    Else If Pin is LOW (0) AND State is DebounceWaiting:
+        // Falling Edge Detected
+        State = DebounceLow
+        
+    Restart Poll Timer (10ms)
+                </div>
+            </details>
+    
+            <details class="service-block">
+                <summary class="service-title">LEDService (Display Driver)</summary>
+                <div class="pseudocode-box">
 Function RunLEDService(Event):
   Switch CurrentState:
     Case IDLE:
       If Event is ADD_CHAR:
-        If Mode is FULL: Scroll entire buffer, add char to end
-        If Mode is SPLIT: Scroll modules 2-4 only, add char to module 2
+        If Mode is FULL: 
+          Scroll entire buffer left by 1 char width
+          Add new char to end of buffer
+        If Mode is SPLIT: 
+          Scroll only modules 2-4
+          Add new char to module 2
         Trigger UPDATE_ROW Event
       If Event is UPDATE_STATIC_BUFFER:
         Update module 1 (Timer) directly without scrolling
@@ -418,285 +775,392 @@ Function RunLEDService(Event):
     Case UPDATE:
       If Event is UPDATE_ROW:
         Call HAL function DM_TakeDisplayUpdateStep()
-        If HAL reports "Done":
+        // DM_TakeDisplayUpdateStep pushes one row of data to MAX7219
+        If Frame Complete:
           Return to IDLE state
         Else:
-          Re-post UPDATE_ROW to self (Keep pushing bits)
-            </div>
-        </details>
-
-        <details class="service-block">
-            <summary class="service-title">ServoService (Actuators)</summary>
-            <div class="pseudocode-box">
+          Re-post UPDATE_ROW to self (continue refreshing matrix)
+                </div>
+            </details>
+    
+            <details class="service-block">
+                <summary class="service-title">ServoService (Actuators)</summary>
+                <div class="pseudocode-box">
 Function RunServoService(Event):
   If Event is INIT:
     Set PWM Pulse Width to Middle (Neutral) for both servos
+    // Servos controlled via OC3 and OC4 with Timer2 base
 
   If Event is TEST_SERVO_DISPENSE:
+    // Received when game is won
     Set PWM Pulse Width to Minimum (Push Gear)
     Start Servo Timer (2 seconds)
 
   If Event is TEST_SERVO_DECOR:
-    Set PWM Pulse Width to Target
+    Set PWM Pulse Width to Target (Rotate Decorative Gear)
     Start Servo Timer (2 seconds)
 
   If Event is TIMEOUT:
+    // Return servo to neutral position after action is complete
     Set PWM Pulse Width back to Middle (Retract)
-            </div>
-        </details>
-
-        <details class="service-block">
-            <summary class="service-title">SoundService (Audio via UART)</summary>
-            <div class="pseudocode-box">
+                </div>
+            </details>
+    
+            <details class="service-block">
+                <summary class="service-title">SoundService (Audio)</summary>
+                <div class="pseudocode-box">
 Function RunSoundService(Event):
-  If Event is START_BUTTON_PRESSED:
-    Send UART Command: Play Track [START_SOUND]
-  
-  If Event is FLIPPER_PRESSED:
-    Send UART Command: Play Track [FLIPPER_SOUND]
+  // Controls Adafruit Audio FX Sound Board via GPIO Triggers
+  // Logic: Active LOW triggers (Pins held LOW to play)
 
-  If Event is SCORE or PIEZO_TRIPPED:
-    Send UART Command: Play Track [HIT_SOUND]
+  If Event is ES_START_BUTTON_PRESSED:
+    // Start Background Music (BGM)
+    Set BGM_TRIGGER_PIN to LOW (Hold active)
 
-Helper JQ6500_SendCommand:
-  Send 0x7E (Start Byte)
-  Send Length, Command, and Parameters
-  Send 0xEF (End Byte)
-            </div>
-        </details>
+  If Event is ES_PIEZO_TRIPPED or ES_IR_SCORE_TRIPPED:
+    // Play Hit Sound Effect
+    Set HIT_TRIGGER_PIN to LOW
+    Start SOUND_TIMER (500ms duration)
+    CurrentPulse = HIT_PULSE
 
-        <details class="service-block">
-            <summary class="service-title">IRSensorService (Input Polling)</summary>
-            <div class="pseudocode-box">
-Function RunIRSensorService(Event):
-  If Event is TIMER_TIMEOUT (10ms Poll):
-    Read Pins (Launch, Score, Loss)
-    
-    For Each Sensor:
-      If Pin is HIGH (Beam Broken) AND State was LOW:
-        State = WAITING
-        Post Event (e.g., ES_IR_LAUNCH_TRIPPED) to Master
-      Else If Pin is LOW (Beam Clear):
-        State = LOW
-        
-    Restart Poll Timer (10ms)
-            </div>
-        </details>
+  If Event is ES_GAME_OVER_SOUND:
+    // Stop BGM and Play Game Over Sound
+    Set BGM_TRIGGER_PIN to HIGH (Stop BGM)
+    Set GAME_TRIGGER_PIN to LOW
+    Start SOUND_TIMER (3000ms duration)
+    CurrentPulse = GAME_PULSE
 
-        <details class="service-block">
-            <summary class="service-title">PiezoService (Analog Input)</summary>
-            <div class="pseudocode-box">
+  If Event is ES_TIMEOUT (SOUND_TIMER):
+    // Release trigger pins after pulse duration
+    If CurrentPulse is HIT_PULSE:
+       Set HIT_TRIGGER_PIN to HIGH
+    If CurrentPulse is GAME_PULSE:
+       Set GAME_TRIGGER_PIN to HIGH
+    CurrentPulse = NO_PULSE
+                </div>
+            </details>
+            
+            <details class="service-block">
+                <summary class="service-title">PiezoService (Analog Input)</summary>
+                <div class="pseudocode-box">
 Function RunPiezoService(Event):
-  If Event is TIMER_TIMEOUT (10ms):
-    If NOT InCooldown:
-      Read ADC Value
-      If Value > THRESHOLD:
-        Post ES_PIEZO_TRIPPED to Master
-        Set InCooldown = TRUE
-        Start Cooldown Timer (150ms)
-    Restart Poll Timer
+  If Event is TIMEOUT (Poll Timer):
+    Read ADC Value from Piezo Pin
+    If (Value > THRESHOLD) AND (NOT InCooldown):
+      Post ES_PIEZO_TRIPPED(Value) to Master Service
+      Set InCooldown = TRUE
+      Start Cooldown Timer (150ms)
     
-  If Event is COOLDOWN_TIMER_EXPIRED:
-    Set InCooldown = FALSE
-            </div>
-        </details>
+    Restart Poll Timer (10ms)
 
-        <details class="service-block">
-            <summary class="service-title">VibrationService (Haptics)</summary>
-            <div class="pseudocode-box">
+  If Event is TIMEOUT (Cooldown Timer):
+    Set InCooldown = FALSE
+                </div>
+            </details>
+    
+            <details class="service-block">
+                <summary class="service-title">VibrationService (Haptic Feedback)</summary>
+                <div class="pseudocode-box">
 Function RunVibrationService(Event):
   If Event is ES_VIBRATION:
-    Set Output Pin HIGH (Motor On)
-    Start Duration Timer (150ms)
-    State = VIBRATING
+    Set Vibration Pin HIGH (Motor ON)
+    Start Vibration Timer (1500ms)
+    State = Vibrating
 
-  If Event is TIMER_EXPIRED:
-    Set Output Pin LOW (Motor Off)
-    State = IDLE
+  If Event is TIMEOUT (Vibration Timer):
+    Set Vibration Pin LOW (Motor OFF)
+    State = Idle
+                </div>
+            </details>
+            
+            <details class="service-block">
+                <summary class="service-title">EventCheckers (Hardware Polling)</summary>
+                <div class="pseudocode-box">
+Function CheckStartButton():
+  Read Pin RB1 (Start Button)
+  If Pin goes LOW (Pressed) and was HIGH:
+    Post ES_START_BUTTON_PRESSED
+  Save current state
+  Return Event or NO_EVENT
+
+Function CheckFlippers():
+  Read Pin RB3 (Flipper Button)
+  If Pin goes LOW (Pressed) and was HIGH:
+    Post ES_FLIPPER_PRESSED
+  Save current state
+  Return Event or NO_EVENT
+  
+// Note: IR Sensors are polled within IRSensorService rather than EventCheckers 
+// to allow for debouncing logic within the service state machine.
+                </div>
+            </details>
+    
+        </section>
+    </div>
+
+    <!-- TEAM TAB -->
+    <div id="team" class="tab-content">
+        <section>
+            <h3>Team</h3>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="img/clive.png" alt="Clive Chung"> 
+                    <h5>Clive Chung</h5>
+                    <p>MSME '26</p>
+                </div>
+                <div class="team-member">
+                    <img src="img/ke.jpg" alt="Ke Ou">
+                    <h5>Ke Ou</h5>
+                    <p>MSME '24, PhD-ME</p>
+                </div>
+                <div class="team-member">
+                    <img src="img/maroussia.jpg" alt="Maroussia Walckiers">
+                    <h5>Maroussia Walckiers</h5>
+                    <p>BS-BME Stanford '25, MSME '26</p>
+                </div>
             </div>
-        </details>
+        </section>
+    </div>
 
-        <details class="service-block">
-            <summary class="service-title">DM_Display (Hardware Abstraction Layer)</summary>
-            <div class="pseudocode-box">
-Function DM_TakeInitDisplayStep():
-  Sequence through init states:
-  1. Send Shutdown Command
-  2. Clear Memory
-  3. Disable Code-B Decoding
-  4. Enable Scan Limit
-  5. Set Brightness
-  6. Wake Up (End Shutdown)
+    <!-- BOM TAB -->
+    <div id="bom" class="tab-content">
+        <section>
+            <h3>Bill of Materials</h3>
+            <p>The total project cost was approximately <strong>$182.39</strong>.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Name</th>
+                        <th>Count</th>
+                        <th>Supplier</th>
+                        <th>Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Servo Motor</td>
+                        <td>Hitec HS-322HD Standard Heavy Duty Servo</td>
+                        <td>2</td>
+                        <td>AMPS</td>
+                        <td>$38.00</td>
+                    </tr>
+                    <tr>
+                        <td>Start button</td>
+                        <td>EG STARTS Arcade Button</td>
+                        <td>1</td>
+                        <td>SPDL</td>
+                        <td>$1.00</td>
+                    </tr>
+                    <tr>
+                        <td>Pinball Ball</td>
+                        <td>Steel Balls for Bullseye Game</td>
+                        <td>1</td>
+                        <td>SPDL</td>
+                        <td>$6.00</td>
+                    </tr>
+                    <tr>
+                        <td>Spring</td>
+                        <td>Spring Assortment Kit</td>
+                        <td>3</td>
+                        <td>SPDL</td>
+                        <td>$8.00</td>
+                    </tr>
+                    <tr>
+                        <td>Wood Screws</td>
+                        <td>Mr. Pen- Wood Screws Assortment Kit</td>
+                        <td>12</td>
+                        <td>SPDL</td>
+                        <td>$6.00</td>
+                    </tr>
+                    <tr>
+                        <td>Socket Head Screws</td>
+                        <td>M5 x 90mm Hex Socket Head Cap Screws</td>
+                        <td>2</td>
+                        <td>AMPS</td>
+                        <td>$7.00</td>
+                    </tr>
+                    <tr>
+                        <td>Comparator</td>
+                        <td>LM339N</td>
+                        <td>1</td>
+                        <td>Lab Kit</td>
+                        <td>$0.00</td>
+                    </tr>
+                    <tr>
+                        <td>1/4" plywood</td>
+                        <td>2x4' 1/4" plywood</td>
+                        <td>2</td>
+                        <td>Home Depot</td>
+                        <td>$30.00</td>
+                    </tr>
+                    <tr>
+                        <td>1/8" plywood</td>
+                        <td>4x8' 1/8" plywood</td>
+                        <td>2</td>
+                        <td>Home Depot</td>
+                        <td>$30.00</td>
+                    </tr>
+                    <tr>
+                        <td>Microcontroller</td>
+                        <td>PIC32MX170F256B</td>
+                        <td>1</td>
+                        <td>Lab Kit</td>
+                        <td>$0.00</td>
+                    </tr>
+                    <tr>
+                        <td>LCD Display</td>
+                        <td>MAX7219 Dot Matrix</td>
+                        <td>1</td>
+                        <td>Lab Kit</td>
+                        <td>$0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Amplifier</td>
+                        <td>MCP6294 (OpAmp)</td>
+                        <td>1</td>
+                        <td>Lab Kit</td>
+                        <td>$0.00</td>
+                    </tr>
+                    <tr>
+                        <td>MOSFET</td>
+                        <td>IRF520 MOSFET Modules (5pcs)</td>
+                        <td>1</td>
+                        <td>Amazon</td>
+                        <td>$7.74</td>
+                    </tr>
+                    <tr>
+                        <td>Vibration Motors</td>
+                        <td>20PCS Vibration Motor DC3V</td>
+                        <td>1</td>
+                        <td>Amazon</td>
+                        <td>$11.06</td>
+                    </tr>
+                    <tr>
+                        <td>Soundboard Adafruit</td>
+                        <td>Adafruit Audio FX Mini Sound Board</td>
+                        <td>1</td>
+                        <td>AMPS</td>
+                        <td>$15.00</td>
+                    </tr>
+                    <tr>
+                        <td>Adafruit Amplifier</td>
+                        <td>Adafruit Mono 2.5W Class D Audio</td>
+                        <td>1</td>
+                        <td>AMPS</td>
+                        <td>$4.00</td>
+                    </tr>
+                    <tr>
+                        <td>Piezo Discs</td>
+                        <td>12Pcs 27mm Piezo Discs with Leads</td>
+                        <td>1</td>
+                        <td>Amazon</td>
+                        <td>$7.74</td>
+                    </tr>
+                    <tr>
+                        <td>IR Emitter & Receiver</td>
+                        <td>Digital 38khz IR Receiver/Transmitter</td>
+                        <td>1</td>
+                        <td>Amazon</td>
+                        <td>$8.85</td>
+                    </tr>
+                    <tr>
+                        <td>Speaker</td>
+                        <td>Speaker - 3" Diameter - 8 Ohm 1 Watt</td>
+                        <td>1</td>
+                        <td>SPDL</td>
+                        <td>$2.00</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TOTAL</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>$182.39</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><a href="https://docs.google.com/spreadsheets/d/1muiBZHbCsakAO4bE_VL7oPqp21OFci2PAbMDRD0AnU0/edit?gid=0#gid=0">View Full BOM Spreadsheet</a></p>
+        </section>
+    </div>
 
-Function DM_TakeDisplayUpdateStep():
-  Send one row of data to MAX7219 via SPI
-  Increment Row Counter
-  If Row Counter >= 8: Return TRUE (Frame Complete)
-  Else: Return FALSE
-            </div>
-        </details>
-
-        <details class="service-block">
-            <summary class="service-title">IREmitterService (Hardware Setup)</summary>
-            <div class="pseudocode-box">
-Function InitIREmitterService():
-  Configure Timer 3
-  Set Frequency to 38kHz
-  Map Output Channel to Pin RB13
-  Set Duty Cycle to 50%
-  Enable Output
-            </div>
-        </details>
-        
-    </section>
-
-    <section id="team">
-        <h3>Team</h3>
-        <div class="team-grid">
-            <div class="team-member">
-                <img src="clive.jpg" alt="Clive Chung"> 
-                <h5>Clive Chung</h5>
-            </div>
-            <div class="team-member">
-                <img src="ke.jpg" alt="Ke Ou">
-                <h5>Ke Ou</h5>
-            </div>
-            <div class="team-member">
-                <img src="maroussia.jpg" alt="Maroussia Walckiers">
-                <h5>Maroussia Walckiers</h5>
-                <p>BS-BME Stanford '25, MSME '26</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="bom">
-        <h3>Bill of Materials</h3>
-        <p>The total project cost was approximately <strong>$175.56</strong>.</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Count</th>
-                    <th>Supplier</th>
-                    <th>Cost</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Hitec HS-322HD Servo</td>
-                    <td>2</td>
-                    <td>AMPS</td>
-                    <td>$38.00</td>
-                </tr>
-                <tr>
-                    <td>EG STARTS Arcade Button</td>
-                    <td>1</td>
-                    <td>SPDL</td>
-                    <td>$1.00</td>
-                </tr>
-                <tr>
-                    <td>Steel Pinball</td>
-                    <td>1</td>
-                    <td>SPDL</td>
-                    <td>$6.00</td>
-                </tr>
-                <tr>
-                    <td>Spring Assortment Kit</td>
-                    <td>3</td>
-                    <td>SPDL</td>
-                    <td>$8.00</td>
-                </tr>
-                <tr>
-                    <td>Hardware (Screws)</td>
-                    <td>14</td>
-                    <td>SPDL/AMPS</td>
-                    <td>$13.00</td>
-                </tr>
-                 <tr>
-                    <td>1/4" Plywood (2x4' and 4x8')</td>
-                    <td>4</td>
-                    <td>Home Depot</td>
-                    <td>$60.00</td>
-                </tr>
-                <tr>
-                    <td>PIC32MX170F256B</td>
-                    <td>1</td>
-                    <td>Lab Kit</td>
-                    <td>$0.00</td>
-                </tr>
-                <tr>
-                    <td>MAX7219 Dot Matrix</td>
-                    <td>1</td>
-                    <td>Lab Kit</td>
-                    <td>$0.00</td>
-                </tr>
-                <tr>
-                    <td>Misc Electronics (LM339N, MCP6294)</td>
-                    <td>2</td>
-                    <td>Lab Kit</td>
-                    <td>$0.00</td>
-                </tr>
-                <tr>
-                    <td>Speaker (8 Ohm 1 Watt)</td>
-                    <td>1</td>
-                    <td>SPDL</td>
-                    <td>$2.00</td>
-                </tr>
-                <tr>
-                    <td>Piezo Discs (12pcs) </td>
-                    <td>1</td>
-                    <td>Amazon</td>
-                    <td>$7.74</td>
-                </tr>
-                <tr>
-                    <td>IR Sensor Kit (4 pairs)</td>
-                    <td>1</td>
-                    <td>Amazon</td>
-                    <td>$8.85</td>
-                </tr>
-                <tr>
-                    <td>JQ6500 Voice Module (2pcs)</td>
-                    <td>1</td>
-                    <td>Amazon</td>
-                    <td>$12.17</td>
-                </tr>
-                <tr>
-                    <td>Vibration Motors (20pcs)</td>
-                    <td>1</td>
-                    <td>Amazon</td>
-                    <td>$11.06</td>
-                </tr>
-                <tr>
-                    <td>IRF520 MOSFET Modules (5pcs)</td>
-                    <td>1</td>
-                    <td>Amazon</td>
-                    <td>$7.74</td>
-                </tr>
-                <tr>
-                    <td><strong>TOTAL</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td><strong>$175.56</strong></td>
-                </tr>
-            </tbody>
-        </table>
-        <p><a href="https://docs.google.com/spreadsheets/d/1muiBZHbCsakAO4bE_VL7oPqp21OFci2PAbMDRD0AnU0/edit?gid=0#gid=0">View Full BOM Spreadsheet</a></p>
-    </section>
-
-    <section id="gems">
-        <h3>Gems of Wisdom</h3>
-        <ul class="styled-list">
-            <li>As you advance in your project, make sure to update your electrical schematics and bill of materials.</li>
-            <li>Make sure to comment your code thoroughly to make each others life easier.</li>
-            <li>Ask questions! Do not hesitate to ask classmates or even friends that do not have anything to do with your project. Every insight is helpful for debugging, design and ideation.</li>
-        </ul>
-    </section>
+    <!-- GEMS TAB -->
+    <div id="gems" class="tab-content">
+        <section>
+            <h3>Gems of Wisdom</h3>
+            <ul class="styled-list">
+                <li>As you advance in your project, make sure to update your electrical schematics and bill of materials.</li>
+                <li>Make sure to comment your code thoroughly to make each others life easier.</li>
+                <li>Ask questions! Do not hesitate to ask classmates or even friends that do not have anything to do with your project. Every insight is helpful for debugging, design and ideation.</li>
+            </ul>
+        </section>
+    </div>
 
 </div>
 
 <footer>
     <p><strong>Team 14</strong> | ME 218a 2025</p>
 </footer>
+
+<!-- Lightbox Modal -->
+<div id="myLightbox" class="lightbox">
+  <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+  <img class="lightbox-content" id="img01">
+  <div id="caption"></div>
+</div>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabContent, tabLinks;
+
+        // Hide all tab content
+        tabContent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].style.display = "none";
+            tabContent[i].classList.remove("active");
+        }
+
+        // Remove active class from all links
+        tabLinks = document.getElementsByClassName("tab-link");
+        for (i = 0; i < tabLinks.length; i++) {
+            tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab and add active class to the button
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+        
+        // Add fade in animation
+        document.getElementById(tabName).classList.add("active");
+    }
+
+    // Lightbox Logic
+    var modal = document.getElementById("myLightbox");
+    var modalImg = document.getElementById("img01");
+    var captionText = document.getElementById("caption");
+    
+    // Get all images in galleries
+    var images = document.querySelectorAll('.gallery img, .diagram-img, .full-width-diagram');
+    
+    images.forEach(function(img) {
+        img.onclick = function(){
+            modal.style.display = "block";
+            modalImg.src = this.src;
+            captionText.innerHTML = this.alt;
+        }
+    });
+
+    function closeLightbox() {
+        modal.style.display = "none";
+    }
+    
+    // Close on click outside
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
 
 </body>
 </html>
